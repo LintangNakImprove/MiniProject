@@ -4,6 +4,8 @@ import com.lintang.miniproject.Response.WebResponse;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,29 +19,29 @@ public class GlobalExceptionHandler {
 
     //    Menangkap Error Jika ID Tidak Di Temukan
     @ExceptionHandler(RuntimeException.class)
-    public WebResponse <String> handleNotFound(RuntimeException e){
+    public ResponseEntity<WebResponse <Object>> handleRunTime(RuntimeException e){
         e.printStackTrace();
 
-        return WebResponse.<String> builder()
-                .status("Not Found")
-                .message(e.getMessage())
-                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                WebResponse.<Object>builder()
+                        .status("Error")
+                        .message(e.getMessage())
+                        .data(null)
+                        .build()
+        );
+
     }
     //    Menangkap Error Jika Input @Valid Tidak Sesuai
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public WebResponse<List<String>> handleValidation(MethodArgumentNotValidException e){
-
-        List<String> errorMessages = e.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(ObjectError::getDefaultMessage)
-                .toList();
-
-        return WebResponse.<List<String>>builder()
+    public ResponseEntity <WebResponse<List<String>>>handleValidation(MethodArgumentNotValidException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+       WebResponse.<List<String>>builder()
                 .status("Bad Request")
                 .message("Input Tidak Valid Bang")
-                .data(errorMessages)
-                .build();
+                .data(null)
+                .build()
+        );
+
     }
 
 //    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
@@ -50,11 +52,11 @@ public class GlobalExceptionHandler {
 //                .build();
 //    }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public WebResponse<String>handleValidationUnique(DataIntegrityViolationException e){
-        return WebResponse.<String>builder()
-                .status("Bad Request")
-                .message("Kode Sku Tidak Boleh Sama")
-                .build();
-    }
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public WebResponse<String>handleValidationUnique(DataIntegrityViolationException e){
+//        return WebResponse.<String>builder()
+//                .status("Bad Request")
+//                .message("Kode Unique Tidak Boleh Sama")
+//                .build();
+//    }
 }

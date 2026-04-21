@@ -52,7 +52,7 @@ public class StockMutationService {
 
             StockMutation stockMutation = new StockMutation();
             stockMutation.setProduct(product);
-            stockMutation.setFromWareHouse(nullz);
+            stockMutation.setFromWareHouse(null);
             stockMutation.setToWareHouse(toWareHouse);
             stockMutation.setQuantity(request.getQuantity());
             stockMutation.setType("IN");

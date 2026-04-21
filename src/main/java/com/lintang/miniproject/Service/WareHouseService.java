@@ -35,10 +35,13 @@ public class WareHouseService {
     }
     @Transactional
 //    Update
-    public WareHouse updateWareHouse(Long id,WareHouseRequest wareHouseRequest){
+    public  WareHouse updateWareHouse(Long id,WareHouseRequest wareHouseRequest){
+         if (wareHouseRepository.existsByCodeAndIdNot(wareHouseRequest.getCode(),id)){
+             throw new IllegalArgumentException("Kode Yang Sudah Di Gunakan" + wareHouseRequest.getCode());
+         }
+
          WareHouse wareHouse = wareHouseRepository.findById(id)
                  .orElseThrow(()-> new RuntimeException("WareHouse Dengan Id:" +id+ "Tidak Di Temukan"));
-
          wareHouse.setCode(wareHouseRequest.getCode());
          wareHouse.setName(wareHouseRequest.getName());
          wareHouse = wareHouseRepository.save(wareHouse);
