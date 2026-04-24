@@ -4,9 +4,9 @@ import com.lintang.miniproject.Model.Category;
 import com.lintang.miniproject.Model.Product;
 import com.lintang.miniproject.Repository.CategoryRepository;
 import com.lintang.miniproject.Repository.ProductRepository;
+import com.lintang.miniproject.Repository.StockMutationRepository;
 import com.lintang.miniproject.Request.ProductRequestCreate;
 import com.lintang.miniproject.Request.ProductRequestUpdate;
-import com.lintang.miniproject.Response.WebResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,10 +14,12 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final StockMutationRepository stockMutationRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository){
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, StockMutationRepository stockMutationRepository){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.stockMutationRepository = stockMutationRepository;
     }
 //    Create
     @Transactional
@@ -62,7 +64,7 @@ public class ProductService {
         product = productRepository.save(product);
         return product;
     }
-//    Delete
+//    Delete Soft
     public Product deleteProduct(Long id){
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product tidak ditemukan"));
@@ -78,4 +80,19 @@ public class ProductService {
         product.setIsActive(true);
         return productRepository.save(product);
     }
+
+//    Delete Permanen
+    public void hapusProduk(Long id){
+    Product product =  productRepository.findById(id)
+            .orElseThrow(()-> new RuntimeException("Product Tidak Di Temukan"));
+
+    if (product.getIsActive() == true){
+        throw new RuntimeException("Product Active Tidak Bisa Di Hapus");
+    }
+
+    stockMutationRepository.nullifyProduct(id);
+
+    productRepository.deleteById(id);
+    }
+
 }

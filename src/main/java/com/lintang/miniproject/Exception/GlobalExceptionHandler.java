@@ -52,11 +52,11 @@ public class GlobalExceptionHandler {
 //                .build();
 //    }
 
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    public WebResponse<String>handleValidationUnique(DataIntegrityViolationException e){
-//        return WebResponse.<String>builder()
-//                .status("Bad Request")
-//                .message("Kode Unique Tidak Boleh Sama")
-//                .build();
-//    }
+   @ExceptionHandler(DataIntegrityViolationException.class)
+    public WebResponse<String>handleValidationUnique(DataIntegrityViolationException e){
+        return WebResponse.<String>builder()
+                .status("Bad Request")
+                .message("Kode Unique Tidak Boleh Sama")
+                .build();
+    }
 }
