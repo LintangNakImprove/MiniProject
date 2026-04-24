@@ -6,6 +6,8 @@ import com.lintang.miniproject.Request.ProductRequestUpdate;
 import com.lintang.miniproject.Response.WebResponse;
 import com.lintang.miniproject.Service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -71,6 +73,22 @@ public class ProductController {
                 .data(productService.restoreProduct(id))
                 .build();
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<WebResponse<Product>> deleteProduct(@PathVariable Long id, Product product) {
+        productService.hapusProduk(id);
 
-
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    WebResponse.<Product>builder()
+                            .status("Success")
+                            .message("Product berhasil dihapus")
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    WebResponse.<Product>builder()
+                            .status("Failed")
+                            .message("Product gagal dihapus")
+                            .build());
+        }
+    }
 }

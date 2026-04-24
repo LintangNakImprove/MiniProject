@@ -57,7 +57,7 @@ public class WareHouseStockController {
         List<WareHouseStock> lowStock = wareHouseStockService.getLowStock();
         return new WebResponse<>("success", "Data Low Stock Berhasil Di Ambil", lowStock);
     }
-
+//    Get By Sku
     @GetMapping("/totalStok/{sku}")
     public WebResponse <Integer> getTotalBySku(@PathVariable String sku){
         Integer total = wareHouseStockService.getStockSummaryBySku(sku);

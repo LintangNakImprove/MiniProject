@@ -1,7 +1,10 @@
 package com.lintang.miniproject.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -26,6 +29,7 @@ public class Product {
 
     @Version
     private Long version;
-
-
+    @JsonProperty
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WareHouseStock> warehouseStocks;
 }

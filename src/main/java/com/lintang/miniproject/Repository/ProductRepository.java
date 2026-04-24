@@ -1,7 +1,6 @@
 package com.lintang.miniproject.Repository;
 
 import com.lintang.miniproject.Model.Product;
-import com.lintang.miniproject.Model.WareHouseStock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
